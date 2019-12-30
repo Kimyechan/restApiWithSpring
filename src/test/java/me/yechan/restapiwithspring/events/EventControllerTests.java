@@ -92,7 +92,7 @@ public class EventControllerTests {
         EventDto event = EventDto.builder()
                 .name("Spring")
                 .description("REST API Development with Spring")
-                .beginEventDateTime(LocalDateTime.of(2018,11,23,14,28))
+                .beginEnrollmentDateTime(LocalDateTime.of(2018,11,23,14,28))
                 .closeEnrollmentDateTime(LocalDateTime.of(2018,11,24,14,28))
                 .beginEventDateTime(LocalDateTime.of(2018,11,25,14,28))
                 .endEventDateTime(LocalDateTime.of(2018,11,26,14,28))
@@ -111,8 +111,8 @@ public class EventControllerTests {
                 .andExpect(jsonPath("id").exists())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
-                .andExpect(jsonPath("id").value(Matchers.not(100)))
-                .andExpect(jsonPath("free").value(Matchers.not(true)))
+                .andExpect(jsonPath("free").value(false))
+                .andExpect(jsonPath("offline").value(true))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
         ;
     }

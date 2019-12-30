@@ -17,4 +17,5 @@ public class RestApiWithSpringApplication {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
 }
