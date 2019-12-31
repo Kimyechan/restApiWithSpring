@@ -1,6 +1,7 @@
 package me.yechan.restapiwithspring.events;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -35,25 +36,25 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
-        if(errors.hasErrors()){
+        if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
 
         eventValidator.validate(eventDto, errors);
-        if(errors.hasErrors()){
+        if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
 
         Event event = modelMapper.map(eventDto, Event.class);
         event.update();
         Event newEvent = this.eventRepository.save(event);
+
         ControllerLinkBuilder selfLinkBuilder = linkTo(EventController.class).slash(newEvent.getId());
-        URI createUri = linkTo(selfLinkBuilder).toUri();
-        EventResource eventResource = new EventResource((event));
+        URI createdURI = selfLinkBuilder.toUri();
+        EventResource eventResource = new EventResource(newEvent);
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
-
-        eventResource.add(selfLinkBuilder.withRel("update-event"));
-        return ResponseEntity.created(createUri).body(eventResource);
-
+        eventResource.add(linkTo(EventController.class).withRel("update-events"));
+        return ResponseEntity.created(createdURI).body(eventResource);
     }
 }
+
