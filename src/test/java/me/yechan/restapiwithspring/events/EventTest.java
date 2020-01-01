@@ -1,40 +1,42 @@
 package me.yechan.restapiwithspring.events;
 
-
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
-class EventTest {
+public class EventTest {
 
     @Test
     public void builder() {
         Event event = Event.builder()
-                .name("Inflean Spring Rest API")
-                .description("REST API development with Spring")
-                .build();
+                .name("Spring REST API")
+                .description("REST API development").build();
         assertThat(event).isNotNull();
     }
 
     @Test
-    public void javaBean(){
-        Event event = new Event();
+    public void javaBean() {
+        // Given
         String name = "Event";
-        String description = "Spring";
+        String description = "Spring REST API";
 
+        // When
+        Event event = new Event();
         event.setName(name);
         event.setDescription(description);
 
+        // Then
         assertThat(event.getName()).isEqualTo(name);
         assertThat(event.getDescription()).isEqualTo(description);
     }
 
     @Test
     @Parameters
+    //@Parameters(method = "parametersForTestFree")
     public void testFree(int basePrice, int maxPrice, boolean isFree) {
         // Given
         Event event = Event.builder()
@@ -54,7 +56,6 @@ class EventTest {
                 new Object[] {0, 0, true},
                 new Object[] {100, 0, false},
                 new Object[] {0, 100, false},
-                new Object[] {100, 200, false}
         };
     }
 
@@ -63,22 +64,21 @@ class EventTest {
     public void testOffline(String location, boolean isOffline) {
         // Given
         Event event = Event.builder()
-                .location(location)
+                .location("StartUp Factory")
                 .build();
 
         // When
         event.update();
 
         // Then
-        assertThat(event.isOffline()).isEqualTo(isOffline);
+        assertThat(event.isOffline()).isTrue();
     }
 
     private Object[] parametersForTestOffline() {
         return new Object[] {
                 new Object[] {"강남", true},
                 new Object[] {null, false},
-                new Object[] {"       ", false}
+                new Object[] {"   ", false},
         };
     }
-
 }
